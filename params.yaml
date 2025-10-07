@@ -1,0 +1,26 @@
+clean:
+  impute: mean          # mean|median|most_frequent|none
+  drop_columns: []      # ["ID", ...] si aplica
+  outliers:
+    method: iqr         # iqr|zscore|none
+    z_thresh: 3.0
+
+features:
+  encode: onehot        # onehot|none
+  scale: standard       # standard|minmax|none
+  drop_low_variance: true
+  variance_thresh: 0.0
+
+split:
+  test_size: 0.2
+  random_state: 42
+  stratify: true
+
+model:
+  alg: "logreg"         # logreg|rf
+  params:
+    max_iter: 1000
+
+mlflow:
+  tracking_uri: "local"  # usa 'local' para la UI local: mlflow ui
+  experiment: "absenteeism-baseline"

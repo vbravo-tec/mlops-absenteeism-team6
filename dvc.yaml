@@ -1,0 +1,55 @@
+stages:
+  clean_raw:
+    cmd: python -m mlops.dataset --task clean --input data/raw/work_absenteeism_modified.csv --output data/interim/absenteeism_clean.parquet
+    deps:
+      - data/raw/work_absenteeism_modified.csv
+      - mlops/dataset.py
+    params:
+      - clean.impute
+      - clean.drop_columns
+      - clean.outliers.method
+      - clean.outliers.z_thresh
+    outs:
+      - data/interim/absenteeism_clean.parquet
+
+  features:
+    cmd: python -m mlops.features --task build --input data/interim/absenteeism_clean.parquet --output data/processed/absenteeism_features.parquet
+    deps:
+      - data/interim/absenteeism_clean.parquet
+      - mlops/features.py
+    params:
+      - features.encode
+      - features.scale
+      - features.drop_low_variance
+      - features.variance_thresh
+    outs:
+      - data/processed/absenteeism_features.parquet
+
+  split:
+    cmd: python -m mlops.dataset --task split --input data/processed/absenteeism_features.parquet --train data/processed/train.parquet --test data/processed/test.parquet
+    deps:
+      - data/processed/absenteeism_features.parquet
+      - mlops/dataset.py
+    params:
+      - split.test_size
+      - split.random_state
+      - split.stratify
+    outs:
+      - data/processed/train.parquet
+      - data/processed/test.parquet
+
+  train_model:
+    cmd: python -m mlops.modeling.train --train data/processed/train.parquet --test data/processed/test.parquet --model-out models/model.pkl --metrics-out metrics.json
+    deps:
+      - data/processed/train.parquet
+      - data/processed/test.parquet
+      - mlops/modeling/train.py
+    params:
+      - model.alg
+      - model.params
+      - mlflow.tracking_uri
+      - mlflow.experiment
+    outs:
+      - models/model.pkl
+    metrics:
+      - metrics.json
