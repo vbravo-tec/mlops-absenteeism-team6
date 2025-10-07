@@ -1,0 +1,4 @@
+[core]
+    remote = teamstore
+['remote "teamstore"']
+    url = gdrive://1ZI3pkodyDZkrhuS6cR34bIy926qXhW56
