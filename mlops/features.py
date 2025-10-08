@@ -34,7 +34,9 @@ def build_features(input_path, output_path, P):
     # Encoding
     if cat_cols:
         if encode == "onehot":
-            transformers.append(("onehot", OneHotEncoder(handle_unknown="ignore", sparse_output=False), cat_cols))
+            transformers.append(
+                ("onehot", OneHotEncoder(handle_unknown="ignore", sparse_output=False), cat_cols)
+            )
         else:
             # fallback: sin encoding
             pass
@@ -47,7 +49,9 @@ def build_features(input_path, output_path, P):
             transformers.append(("scale", MinMaxScaler(), num_cols))
 
     if transformers:
-        ct = ColumnTransformer(transformers=transformers, remainder="drop", verbose_feature_names_out=False)
+        ct = ColumnTransformer(
+            transformers=transformers, remainder="drop", verbose_feature_names_out=False
+        )
         X_arr = ct.fit_transform(X)
         out_cols = []
 

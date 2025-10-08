@@ -4,7 +4,6 @@
 
 --task split: divide train/test desde un Parquet procesado y guarda en data/processed/..."""
 
-
 import argparse
 from pathlib import Path
 
@@ -37,6 +36,7 @@ def zscore_filter(df, z=3.0, numeric_cols=None):
     if numeric_cols is None:
         numeric_cols = df.select_dtypes(include=[np.number]).columns
     from scipy.stats import zscore as zf  # si no quieren scipy, pueden implementar manual
+
     zscores = df[numeric_cols].apply(lambda s: np.abs(zf(s, nan_policy="omit")))
     mask = (zscores <= z) | zscores.isna()
     # mantener filas donde *todas* las columnas cumplen
@@ -104,7 +104,10 @@ def split_task(input_path, train_path, test_path, P):
     target_col = "target" if "target" in df.columns else None
     if target_col is None:
         # dataset de UCI no trae target explícita; crear dummy (columna binaria) como placeholder
-        df["target"] = (df.select_dtypes(include=[np.number]).sum(axis=1) > df.select_dtypes(include=[np.number]).sum(axis=1).median()).astype(int)
+        df["target"] = (
+            df.select_dtypes(include=[np.number]).sum(axis=1)
+            > df.select_dtypes(include=[np.number]).sum(axis=1).median()
+        ).astype(int)
         target_col = "target"
 
     X = df.drop(columns=[target_col])

@@ -1,4 +1,5 @@
 from pathlib import Path
+
 DATA_DIR = Path("data")
 RAW = DATA_DIR / "raw"
 INTERIM = DATA_DIR / "interim"
