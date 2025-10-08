@@ -138,24 +138,23 @@ dvc repro
 
 ```mermaid
 flowchart TD
-    A[👩‍💻 Desarrollador crea rama<br/> (data/cleaning-nulos, features/encoding...)] --> B[💻 Commit + Push]
-    B --> C[📥 Pull Request hacia main]
+    A[Desarrollador crea rama (data/cleaning-nulos, features/encoding...)] --> B[Commit + Push]
+    B --> C[Pull Request hacia main]
 
-    C --> D{📑 CODEOWNERS<br/>Asigna revisores}
-    D -->|EDA/Features| DS[👩‍🔬 Data Scientist (@A01795943)]
-    D -->|Cleaning/Data| DE[🛠️ Data Engineer (@Joelrbtec)]
-    D -->|Modeling| MLE[🤖 ML Engineer (@Mike)]
-    D -->|Infra/Pipeline| SRE[⚙️ DevOps / SRE (@vbravo-tec)]
+    C --> D{CODEOWNERS asigna revisores}
+    D -->|EDA/Features| DS[Data Scientist (@A01795943)]
+    D -->|Cleaning/Data| DE[Data Engineer (@Joelrbtec)]
+    D -->|Modeling| MLE[ML Engineer (@Mike)]
+    D -->|Infra/Pipeline| SRE[DevOps / SRE (@vbravo-tec)]
 
-    DS --> E[✅ Revisión y aprobación]
+    DS --> E[Revisión y aprobación]
     DE --> E
     MLE --> E
     SRE --> E
 
-    E --> F[🔄 CI/CD valida DVC y tests]
-    F -->|✔️ Todo OK| G[🚀 Merge a main]
-    F -->|❌ Error| H[🔧 Correcciones en la rama]
-
+    E --> F[CI/CD valida DVC y tests]
+    F -->|Todo OK| G[Merge a main]
+    F -->|Error| H[Correcciones en la rama] ```
 
 ---
 
@@ -171,34 +170,34 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    subgraph Dev[👩‍💻 Desarrollo en ramas]
-        A[Desarrollador crea rama<br/> (data/cleaning-nulos, features/encoding...)] --> B[Commit + Push]
+    subgraph Dev[Desarrollo en ramas]
+        A[Desarrollador crea rama (data/cleaning-nulos, features/encoding...)] --> B[Commit + Push]
         B --> C[Pull Request hacia main]
     end
 
-    subgraph Rev[📑 Revisión por roles]
-        C --> D{CODEOWNERS<br/>Asigna revisores}
-        D -->|EDA/Features| DS[👩‍🔬 Data Scientist (@A01795943)]
-        D -->|Cleaning/Data| DE[🛠️ Data Engineer (@Joelrbtec)]
-        D -->|Modeling| MLE[🤖 ML Engineer (@Mike)]
-        D -->|Infra/Pipeline| SRE[⚙️ DevOps / SRE (@vbravo-tec)]
-        DS --> E[✅ Aprobación]
+    subgraph Rev[Revisión por roles]
+        C --> D{CODEOWNERS asigna revisores}
+        D -->|EDA/Features| DS[Data Scientist (@A01795943)]
+        D -->|Cleaning/Data| DE[Data Engineer (@Joelrbtec)]
+        D -->|Modeling| MLE[ML Engineer (@Mike)]
+        D -->|Infra/Pipeline| SRE[DevOps / SRE (@vbravo-tec)]
+        DS --> E[Aprobación]
         DE --> E
         MLE --> E
         SRE --> E
     end
 
-    subgraph CI[🔄 CI/CD + DVC]
-        E --> F[CI valida lint + tests]
+    subgraph CI[CI/CD + DVC]
+        E --> F[CI valida lint y tests]
         F --> G{DVC Pipeline}
-        G --> H[Datos versionados<br/>📂 Google Drive Remote]
-        G --> I[Outputs reproducibles<br/>📊 data/interim, processed, models/]
+        G --> H[Datos versionados en Google Drive Remote]
+        G --> I[Outputs reproducibles (data/interim, processed, models/)]
         G --> J[params.yaml actualizado]
     end
 
-    G --> K[✔️ PR listo para merge]
-    F -->|❌ Error| L[🔧 Correcciones en la rama]
-    K --> M[🚀 Merge a main]
+    G --> K[PR listo para merge]
+    F -->|Error| L[Correcciones en la rama]
+    K --> M[Merge a main]
 
 
 ---
