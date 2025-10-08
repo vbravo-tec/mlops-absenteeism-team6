@@ -121,3 +121,96 @@ dvc repro
 - **main protegido**:  
   - No se permiten commits directos.  
   - Solo se actualiza mediante **PR revisados y aprobados**.
+
+## 👥 Roles y responsabilidades del equipo
+
+| Rol                | GitHub User   | Responsabilidades principales |
+|--------------------|--------------|--------------------------------|
+| **DevOps / SRE**   | @vbravo-tec  | Configuración de CI/CD, versionado con DVC, pipelines (`dvc.yaml`, `params.yaml`), mantenimiento de infraestructura del repo. |
+| **Data Scientist** | @A01795943   | Análisis exploratorio (EDA), creación y validación de features (`mlops/features.py`), experimentación en notebooks. |
+| **Data Engineer**  | @Joelrbtec   | Limpieza de datos, imputación, gestión de datasets (`mlops/dataset.py`, `/data/`), asegurar calidad de los datos. |
+| **ML Engineer**    | @Mike        | Construcción, entrenamiento y evaluación de modelos (`mlops/modeling/`), ajuste de hiperparámetros, métricas. |
+
+📌 Todas las tareas deben hacerse en **ramas específicas por tarea** y ser integradas vía **Pull Request**.  
+📌 GitHub solicitará revisión automática de acuerdo a este rol, gracias a la configuración en el archivo `CODEOWNERS`.
+
+## 🔄 Flujo de Trabajo del Equipo
+
+```mermaid
+flowchart TD
+    A[👩‍💻 Desarrollador crea rama<br/> (data/cleaning-nulos, features/encoding...)] --> B[💻 Commit + Push]
+    B --> C[📥 Pull Request hacia main]
+
+    C --> D{📑 CODEOWNERS<br/>Asigna revisores}
+    D -->|EDA/Features| DS[👩‍🔬 Data Scientist (@A01795943)]
+    D -->|Cleaning/Data| DE[🛠️ Data Engineer (@Joelrbtec)]
+    D -->|Modeling| MLE[🤖 ML Engineer (@Mike)]
+    D -->|Infra/Pipeline| SRE[⚙️ DevOps / SRE (@vbravo-tec)]
+
+    DS --> E[✅ Revisión y aprobación]
+    DE --> E
+    MLE --> E
+    SRE --> E
+
+    E --> F[🔄 CI/CD valida DVC y tests]
+    F -->|✔️ Todo OK| G[🚀 Merge a main]
+    F -->|❌ Error| H[🔧 Correcciones en la rama]
+
+
+---
+
+📌 **Cómo leerlo:**  
+1. Cada integrante trabaja en su rama (`data/...`, `features/...`, etc.).  
+2. Al abrir un **Pull Request**, GitHub asigna automáticamente revisores según `CODEOWNERS`.  
+3. El equipo revisa y aprueba → corre el **CI/CD**.  
+4. Si pasa, se hace merge a `main`.  
+
+---
+
+## 🔄 Flujo de Trabajo con DVC Integrado
+
+```mermaid
+flowchart TD
+    subgraph Dev[👩‍💻 Desarrollo en ramas]
+        A[Desarrollador crea rama<br/> (data/cleaning-nulos, features/encoding...)] --> B[Commit + Push]
+        B --> C[Pull Request hacia main]
+    end
+
+    subgraph Rev[📑 Revisión por roles]
+        C --> D{CODEOWNERS<br/>Asigna revisores}
+        D -->|EDA/Features| DS[👩‍🔬 Data Scientist (@A01795943)]
+        D -->|Cleaning/Data| DE[🛠️ Data Engineer (@Joelrbtec)]
+        D -->|Modeling| MLE[🤖 ML Engineer (@Mike)]
+        D -->|Infra/Pipeline| SRE[⚙️ DevOps / SRE (@vbravo-tec)]
+        DS --> E[✅ Aprobación]
+        DE --> E
+        MLE --> E
+        SRE --> E
+    end
+
+    subgraph CI[🔄 CI/CD + DVC]
+        E --> F[CI valida lint + tests]
+        F --> G{DVC Pipeline}
+        G --> H[Datos versionados<br/>📂 Google Drive Remote]
+        G --> I[Outputs reproducibles<br/>📊 data/interim, processed, models/]
+        G --> J[params.yaml actualizado]
+    end
+
+    G --> K[✔️ PR listo para merge]
+    F -->|❌ Error| L[🔧 Correcciones en la rama]
+    K --> M[🚀 Merge a main]
+
+
+---
+
+📌 **Explicación:**  
+1. Cada integrante trabaja en su rama y abre un PR.  
+2. Los revisores se asignan automáticamente según `CODEOWNERS`.  
+3. El **CI/CD** valida que el código cumpla con reglas y que el **pipeline de DVC** corra.  
+4. DVC asegura que:  
+   - Los **datos crudos y derivados** están en **Google Drive (remote)**.  
+   - Los **outputs** (clean, features, modelos) son reproducibles.  
+   - Los **parámetros** se controlan en `params.yaml`.  
+5. Si todo pasa → se mergea a `main`.  
+
+---

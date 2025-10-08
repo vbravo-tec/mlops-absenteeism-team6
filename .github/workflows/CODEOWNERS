@@ -1,0 +1,19 @@
+# 👩‍💻 Data Scientist (EDA, Features)
+# Usuario: A01795943
+/notebooks/              @A01795943
+/mlops/features.py       @A01795943
+
+# 🛠️ Data Engineer (Limpieza, Dataset split)
+# Usuario: Joelrbtec
+/mlops/dataset.py        @Joelrbtec
+/data/                   @Joelrbtec
+
+# 🤖 ML Engineer (Modeling, entrenamiento, predicción)
+# Usuario: Mike
+/mlops/modeling/         @Mike
+
+# ⚙️ DevOps / SRE (Infra, DVC, CI/CD, configuración)
+# Usuario: vbravo-tec
+/.github/                @vbravo-tec
+/dvc.yaml                @vbravo-tec
+/params.yaml             @vbravo-tec
