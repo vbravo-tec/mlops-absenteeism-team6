@@ -134,27 +134,28 @@ dvc repro
 📌 Todas las tareas deben hacerse en **ramas específicas por tarea** y ser integradas vía **Pull Request**.  
 📌 GitHub solicitará revisión automática de acuerdo a este rol, gracias a la configuración en el archivo `CODEOWNERS`.
 
+
 ## 🔄 Flujo de Trabajo del Equipo
 
 ```mermaid
 flowchart TD
-    A[Desarrollador crea rama (data/cleaning-nulos, features/encoding...)] --> B[Commit + Push]
-    B --> C[Pull Request hacia main]
+    A[Crear rama de trabajo] --> B[Commit y push]
+    B --> C[Pull request hacia main]
 
     C --> D{CODEOWNERS asigna revisores}
-    D -->|EDA/Features| DS[Data Scientist (@A01795943)]
-    D -->|Cleaning/Data| DE[Data Engineer (@Joelrbtec)]
-    D -->|Modeling| MLE[ML Engineer (@Mike)]
-    D -->|Infra/Pipeline| SRE[DevOps / SRE (@vbravo-tec)]
+    D --> DS[Data Scientist]
+    D --> DE[Data Engineer]
+    D --> MLE[ML Engineer]
+    D --> SRE[DevOps SRE]
 
-    DS --> E[Revisión y aprobación]
+    DS --> E[Aprobacion]
     DE --> E
     MLE --> E
     SRE --> E
 
-    E --> F[CI/CD valida DVC y tests]
-    F -->|Todo OK| G[Merge a main]
-    F -->|Error| H[Correcciones en la rama] ```
+    E --> F[CI valida lint y tests]
+    F -->|OK| G[Merge a main]
+    F -->|Error| H[Correcciones en la rama]
 
 ---
 
@@ -170,29 +171,29 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    subgraph Dev[Desarrollo en ramas]
-        A[Desarrollador crea rama (data/cleaning-nulos, features/encoding...)] --> B[Commit + Push]
-        B --> C[Pull Request hacia main]
+    subgraph Dev [Desarrollo en ramas]
+        A[Crear rama de trabajo] --> B[Commit y push]
+        B --> C[Pull request hacia main]
     end
 
-    subgraph Rev[Revisión por roles]
+    subgraph Revision [Revision por roles]
         C --> D{CODEOWNERS asigna revisores}
-        D -->|EDA/Features| DS[Data Scientist (@A01795943)]
-        D -->|Cleaning/Data| DE[Data Engineer (@Joelrbtec)]
-        D -->|Modeling| MLE[ML Engineer (@Mike)]
-        D -->|Infra/Pipeline| SRE[DevOps / SRE (@vbravo-tec)]
-        DS --> E[Aprobación]
+        D --> DS[Data Scientist]
+        D --> DE[Data Engineer]
+        D --> MLE[ML Engineer]
+        D --> SRE[DevOps SRE]
+        DS --> E[Aprobacion]
         DE --> E
         MLE --> E
         SRE --> E
     end
 
-    subgraph CI[CI/CD + DVC]
+    subgraph CI [CI y DVC]
         E --> F[CI valida lint y tests]
-        F --> G{DVC Pipeline}
-        G --> H[Datos versionados en Google Drive Remote]
-        G --> I[Outputs reproducibles (data/interim, processed, models/)]
-        G --> J[params.yaml actualizado]
+        F --> G{Pipeline DVC}
+        G --> H[Datos en Google Drive]
+        G --> I[Outputs reproducibles en data y models]
+        G --> J[Parametros en params.yaml]
     end
 
     G --> K[PR listo para merge]
