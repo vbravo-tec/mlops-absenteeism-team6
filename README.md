@@ -155,7 +155,9 @@ flowchart TD
 
     E --> F[CI valida lint y tests]
     F -->|OK| G[Merge a main]
-    F -->|Error| H[Correcciones en la rama]```
+    F -->|Error| H[Correcciones en la rama]
+
+```
 
 
 📌 **Cómo leerlo:**  
@@ -196,7 +198,9 @@ flowchart TD
 
     G --> K[PR listo para merge]
     F -->|Error| L[Correcciones en la rama]
-    K --> M[Merge a main] ```
+    K --> M[Merge a main] 
+    
+```
 
 
 ---
