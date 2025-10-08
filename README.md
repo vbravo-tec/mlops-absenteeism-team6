@@ -155,9 +155,8 @@ flowchart TD
 
     E --> F[CI valida lint y tests]
     F -->|OK| G[Merge a main]
-    F -->|Error| H[Correcciones en la rama]
+    F -->|Error| H[Correcciones en la rama]```
 
----
 
 📌 **Cómo leerlo:**  
 1. Cada integrante trabaja en su rama (`data/...`, `features/...`, etc.).  
@@ -165,7 +164,6 @@ flowchart TD
 3. El equipo revisa y aprueba → corre el **CI/CD**.  
 4. Si pasa, se hace merge a `main`.  
 
----
 
 ## 🔄 Flujo de Trabajo con DVC Integrado
 
@@ -198,7 +196,7 @@ flowchart TD
 
     G --> K[PR listo para merge]
     F -->|Error| L[Correcciones en la rama]
-    K --> M[Merge a main]
+    K --> M[Merge a main] ```
 
 
 ---
