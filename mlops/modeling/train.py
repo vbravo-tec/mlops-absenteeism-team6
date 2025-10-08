@@ -4,7 +4,6 @@ from pathlib import Path
 
 import mlflow
 import mlflow.sklearn
-import numpy as np
 import pandas as pd
 import yaml
 from sklearn.linear_model import LogisticRegression
