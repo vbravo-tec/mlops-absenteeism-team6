@@ -206,7 +206,7 @@ flowchart TD
 ---
 
 📌 **Explicación:**  
-1. Cada integrante trabaja en su rama y abre un PR.  
+1. Cada integrante trabaja en su rama y abre un Pull Request.  
 2. Los revisores se asignan automáticamente según `CODEOWNERS`.  
 3. El **CI/CD** valida que el código cumpla con reglas y que el **pipeline de DVC** corra.  
 4. DVC asegura que:  
