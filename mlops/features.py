@@ -14,6 +14,7 @@ def load_params():
 
 
 def build_features(input_path, output_path, P):
+    # carga datos
     df = pd.read_parquet(input_path)
 
     # separar target si la hubiera
