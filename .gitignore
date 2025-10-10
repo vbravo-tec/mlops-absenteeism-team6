@@ -207,6 +207,3 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 /metrics.json
-
-# DVC
-.dvc/config
