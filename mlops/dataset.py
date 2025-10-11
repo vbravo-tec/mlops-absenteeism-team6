@@ -131,7 +131,6 @@ def clean_task(input_path, output_path, P):
         df = df.dropna(subset=[target_col])
         df[target_col] = df[target_col].astype(float)
 
-
     # Outliers
     if out_method == "iqr":
         df = iqr_filter(df)
