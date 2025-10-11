@@ -5,7 +5,6 @@ stages:
       - data/raw/work_absenteeism_modified.csv
       - mlops/dataset.py
     params:
-      - clean.impute
       - clean.drop_columns
       - clean.outliers.method
       - clean.outliers.z_thresh
