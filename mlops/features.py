@@ -15,7 +15,7 @@ def load_params():
 
 def create_behavioral_features(df, P):
     """
-    
+
     Crea nuevas columnas de comportamiento basadas en expresiones definidas
     dinámicamente en params.yaml bajo 'features.new'.
 

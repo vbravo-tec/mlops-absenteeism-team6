@@ -4,6 +4,7 @@ stages:
     deps:
       - data/raw/work_absenteeism_modified.csv
       - mlops/dataset.py
+      - params.yaml
     params:
       - clean.drop_columns
       - clean.outliers.method
@@ -16,6 +17,7 @@ stages:
     deps:
       - data/interim/absenteeism_clean.parquet
       - mlops/features.py
+      - params.yaml
     params:
       - features.encode
       - features.scale
@@ -29,6 +31,7 @@ stages:
     deps:
       - data/processed/absenteeism_features.parquet
       - mlops/dataset.py
+      - params.yaml
     params:
       - split.test_size
       - split.random_state
@@ -43,6 +46,7 @@ stages:
       - data/processed/train.parquet
       - data/processed/test.parquet
       - mlops/modeling/train.py
+      - params.yaml
     params:
       - model.alg
       - model.params

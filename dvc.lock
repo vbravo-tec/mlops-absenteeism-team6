@@ -13,6 +13,10 @@ stages:
       hash: md5
       md5: f873371995c1403c023be3a74bd36e84
       size: 7481
+    - path: params.yaml
+      hash: md5
+      md5: 72600d7315a6ee5c0c7f65eafc222282
+      size: 3928
     params:
       params.yaml:
         clean.drop_columns:
@@ -38,6 +42,10 @@ stages:
       hash: md5
       md5: bef1cf1e0c5a23ae43ea4ac694e3c929
       size: 3887
+    - path: params.yaml
+      hash: md5
+      md5: 72600d7315a6ee5c0c7f65eafc222282
+      size: 3928
     params:
       params.yaml:
         features.drop_low_variance: true
@@ -62,6 +70,10 @@ stages:
       hash: md5
       md5: f873371995c1403c023be3a74bd36e84
       size: 7481
+    - path: params.yaml
+      hash: md5
+      md5: 72600d7315a6ee5c0c7f65eafc222282
+      size: 3928
     params:
       params.yaml:
         split.random_state: 42
@@ -93,6 +105,10 @@ stages:
       hash: md5
       md5: 05162cbad088135e04e8393c739ed7ed
       size: 2659
+    - path: params.yaml
+      hash: md5
+      md5: 72600d7315a6ee5c0c7f65eafc222282
+      size: 3928
     params:
       params.yaml:
         mlflow.experiment: absenteeism-baseline
