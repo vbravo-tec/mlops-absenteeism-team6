@@ -11,24 +11,20 @@ stages:
       size: 79517
     - path: mlops/dataset.py
       hash: md5
-<<<<<<< Updated upstream
-      md5: e48fb336180b64073ced5a5cd52234bd
-      size: 5244
-=======
-      md5: f873371995c1403c023be3a74bd36e84
-      size: 7481
->>>>>>> Stashed changes
+      md5: 8a41b7c9003f46c11c8c8a8904899b89
+      size: 7483
     params:
       params.yaml:
-        clean.drop_columns: []
-        clean.impute: mean
+        clean.drop_columns:
+        - ID
+        - mixed_type_col
         clean.outliers.method: iqr
         clean.outliers.z_thresh: 3.0
     outs:
     - path: data/interim/absenteeism_clean.parquet
       hash: md5
-      md5: 4a564e64b9c9aef36a8de2bd9cf62408
-      size: 25424
+      md5: 94adc8c258881c1fc4c8eed6800da097
+      size: 15636
   features:
     cmd: python -m mlops.features --task build --input 
       data/interim/absenteeism_clean.parquet --output 
@@ -36,17 +32,12 @@ stages:
     deps:
     - path: data/interim/absenteeism_clean.parquet
       hash: md5
-      md5: 4a564e64b9c9aef36a8de2bd9cf62408
-      size: 25424
+      md5: 94adc8c258881c1fc4c8eed6800da097
+      size: 15636
     - path: mlops/features.py
       hash: md5
-<<<<<<< Updated upstream
-      md5: 1b27c5f3ea36bb0f0ade0de1cd55da69
-      size: 2888
-=======
-      md5: bef1cf1e0c5a23ae43ea4ac694e3c929
-      size: 3887
->>>>>>> Stashed changes
+      md5: 6ab0bdea036cc8f24e543ab4ef15fd93
+      size: 5576
     params:
       params.yaml:
         features.drop_low_variance: true
@@ -56,13 +47,8 @@ stages:
     outs:
     - path: data/processed/absenteeism_features.parquet
       hash: md5
-<<<<<<< Updated upstream
-      md5: 1a541eeab67d7165c70caabfb4124958
-      size: 614778
-=======
-      md5: 26a2d61e5ac4915a73f46f3db4f34af9
-      size: 56670
->>>>>>> Stashed changes
+      md5: 15666c371884a448107145065b7fba98
+      size: 64362
   split:
     cmd: python -m mlops.dataset --task split --input 
       data/processed/absenteeism_features.parquet --train 
@@ -70,21 +56,12 @@ stages:
     deps:
     - path: data/processed/absenteeism_features.parquet
       hash: md5
-<<<<<<< Updated upstream
-      md5: 1a541eeab67d7165c70caabfb4124958
-      size: 614778
+      md5: 15666c371884a448107145065b7fba98
+      size: 64362
     - path: mlops/dataset.py
       hash: md5
-      md5: e48fb336180b64073ced5a5cd52234bd
-      size: 5244
-=======
-      md5: 26a2d61e5ac4915a73f46f3db4f34af9
-      size: 56670
-    - path: mlops/dataset.py
-      hash: md5
-      md5: f873371995c1403c023be3a74bd36e84
-      size: 7481
->>>>>>> Stashed changes
+      md5: 8a41b7c9003f46c11c8c8a8904899b89
+      size: 7483
     params:
       params.yaml:
         split.random_state: 42
@@ -93,21 +70,12 @@ stages:
     outs:
     - path: data/processed/test.parquet
       hash: md5
-<<<<<<< Updated upstream
-      md5: 6068376ee98cacfd12a876de2405d9aa
-      size: 599481
+      md5: 40ad1d934d7733aa1ddda3eb64b63235
+      size: 60955
     - path: data/processed/train.parquet
       hash: md5
-      md5: d6806f85fe162b0479ce6e79fc1318b7
-      size: 614723
-=======
-      md5: 4a3b1fcdfb33a8523e1a4d85ee95478b
-      size: 53598
-    - path: data/processed/train.parquet
-      hash: md5
-      md5: c0152f27303334bd325dd78b76c23fef
-      size: 57063
->>>>>>> Stashed changes
+      md5: 3471fc9a86f9f83fcc8f4a2510c0cadf
+      size: 64656
   train_model:
     cmd: python -m mlops.modeling.train --train data/processed/train.parquet 
       --test data/processed/test.parquet --model-out models/model.pkl 
@@ -115,25 +83,16 @@ stages:
     deps:
     - path: data/processed/test.parquet
       hash: md5
-<<<<<<< Updated upstream
-      md5: 6068376ee98cacfd12a876de2405d9aa
-      size: 599481
+      md5: 40ad1d934d7733aa1ddda3eb64b63235
+      size: 60955
     - path: data/processed/train.parquet
       hash: md5
-      md5: d6806f85fe162b0479ce6e79fc1318b7
-      size: 614723
-=======
-      md5: 4a3b1fcdfb33a8523e1a4d85ee95478b
-      size: 53598
-    - path: data/processed/train.parquet
-      hash: md5
-      md5: c0152f27303334bd325dd78b76c23fef
-      size: 57063
->>>>>>> Stashed changes
+      md5: 3471fc9a86f9f83fcc8f4a2510c0cadf
+      size: 64656
     - path: mlops/modeling/train.py
       hash: md5
-      md5: db90bdb753aba15f68357bd5b88275a2
-      size: 2679
+      md5: 05162cbad088135e04e8393c739ed7ed
+      size: 2659
     params:
       params.yaml:
         mlflow.experiment: absenteeism-baseline
@@ -144,14 +103,9 @@ stages:
     outs:
     - path: metrics.json
       hash: md5
-      md5: 06e789be1b3dc555720d013157e47084
-      size: 43
+      md5: 129a7c741155cc57b4b7043fc29471b3
+      size: 73
     - path: models/model.pkl
       hash: md5
-<<<<<<< Updated upstream
-      md5: 9bdfc661a175554a0e87b2b972cae6d6
-      size: 28511
-=======
-      md5: 5ad366bcc7507600ceb0ec8300855a39
-      size: 3279
->>>>>>> Stashed changes
+      md5: 508fe4b087200b14b53ace7695e43bfc
+      size: 3599

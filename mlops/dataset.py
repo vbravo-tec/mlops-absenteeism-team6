@@ -46,37 +46,90 @@ def zscore_filter(df, z=3.0, numeric_cols=None):
 
 
 def clean_task(input_path, output_path, P):
+    """
+    Limpieza general del dataset basada en configuración parametrizada (params.yml).
+    Soporta imputación configurable por columna y validación de rangos.
+    """
     df = pd.read_csv(input_path)
-    # Config
     cfg = P.get("clean", {})
-    drop_cols = cfg.get("drop_columns", []) or []
-    impute = cfg.get("impute", "mean")
-    out_cfg = cfg.get("outliers", {"method": "iqr", "z_thresh": 3.0})
+
+    drop_cols = cfg.get("drop_columns", [])
+    out_cfg = cfg.get("outliers", {})
     out_method = out_cfg.get("method", "iqr")
     z_thresh = float(out_cfg.get("z_thresh", 3.0))
 
-    # Drop columns
+    numeric_cols = cfg.get("numeric_cols", {})
+    categorical_cols = cfg.get("categorical_cols", {})
+    boolean_cols = cfg.get("boolean_cols", {})
+    target_col = cfg.get("target_col", "Absenteeism time in hours")
+
+    # Eliminar columnas innecesarias
     existing = [c for c in drop_cols if c in df.columns]
     if existing:
-        df = df.drop(columns=existing)
+        df = df.drop(columns=existing, errors="ignore")
 
-    # Impute simple num/cat
-    num_cols = df.select_dtypes(include=[np.number]).columns
-    cat_cols = df.select_dtypes(exclude=[np.number]).columns
+    # Limpieza de columnas categóricas (rangos y tipo object)
+    for col, meta in categorical_cols.items():
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors="coerce")
 
-    if impute in ("mean", "median"):
-        if len(num_cols) > 0:
-            if impute == "mean":
-                df[num_cols] = df[num_cols].fillna(df[num_cols].mean())
+            # Validar rango si existe
+            if "range" in meta:
+                min_val, max_val = meta["range"]
+                df = df[df[col].between(min_val, max_val, inclusive="both")]
+
+            # Imputación si aplica
+            if meta.get("impute") == "most_frequent":
+                mode_val = df[col].mode().iloc[0] if not df[col].mode().empty else np.nan
+                df[col] = df[col].fillna(mode_val)
+            elif meta.get("impute") == "fill_zero":
+                df[col] = df[col].fillna(0)
+
+            # Convertir a categórico (string)
+            df[col] = df[col].astype(int).astype(str)
+
+    # Limpieza de columnas numéricas
+    for col, meta in numeric_cols.items():
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors="coerce")
+
+            # Validar rango si se definió
+            if "range" in meta:
+                min_val, max_val = meta["range"]
+                df = df[df[col].between(min_val, max_val, inclusive="both")]
+
+            # Imputación
+            method = meta.get("impute", "none")
+            if method == "mean":
+                val = df[col].mean()
+                df[col] = df[col].fillna(val)
+            elif method == "median":
+                val = df[col].median()
+                df[col] = df[col].fillna(val)
+            elif method == "most_frequent":
+                val = df[col].mode().iloc[0] if not df[col].mode().empty else np.nan
+                df[col] = df[col].fillna(val)
+            elif method == "fill_zero":
+                df[col] = df[col].fillna(0)
+            elif method == "none":
+                df = df.dropna(subset=[col])
             else:
-                df[num_cols] = df[num_cols].fillna(df[num_cols].median())
-        if len(cat_cols) > 0:
-            df[cat_cols] = df[cat_cols].fillna(df[cat_cols].mode().iloc[0])
-    elif impute == "most_frequent":
-        df = df.fillna(df.mode().iloc[0])
-    else:
-        # no imputar
-        pass
+                raise ValueError(f"Método de imputación desconocido: {method}")
+
+            df[col] = df[col].astype(float)
+
+    # Limpieza de columnas booleanas
+    for col in boolean_cols:
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors="coerce")
+            df = df[df[col].isin([0, 1])]
+            df[col] = df[col].astype(bool)
+
+    # Target
+    if target_col in df.columns:
+        df[target_col] = pd.to_numeric(df[target_col], errors="coerce")
+        df = df.dropna(subset=[target_col])
+        df[target_col] = df[target_col].astype(float)
 
     # Outliers
     if out_method == "iqr":

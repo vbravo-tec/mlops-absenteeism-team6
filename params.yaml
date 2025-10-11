@@ -1,13 +1,82 @@
 clean:
-  impute: mean          # mean|median|most_frequent|none
-  drop_columns: []      # ["ID", ...] si aplica
+  drop_columns: ["ID", "mixed_type_col"]
   outliers:
-    method: iqr         # iqr|zscore|none
+    method: iqr # iqr|zscore|none
     z_thresh: 3.0
 
+    # ──────────────────────────────────────────────────────────────
+    # Imputation strategies for missing or invalid values:
+    #
+    #   mean          → Replace missing values with the column mean
+    #   median        → Replace missing values with the column median
+    #   most_frequent → Replace missing values with the most common (mode)
+    #   fill_zero     → Replace missing values with 0
+    #   none          → Do not impute; rows with missing values are removed
+    #
+    # Example:
+    #   Age:
+    #     impute: mean
+    #     range: [18, 65]
+    #
+    # ──────────────────────────────────────────────────────────────
+
+  numeric_cols:
+    Transportation expense:
+      impute: mean
+    Distance from Residence to Work:
+      impute: mean
+    Service time:
+      impute: mean
+    Age:
+      impute: mean
+      range: [18, 65]
+    Work load Average/day:
+      impute: mean
+    Hit target:
+      impute: mean
+      range: [0, 100]
+    Son:
+      impute: median
+      range: [0, 10]
+    Pet:
+      impute: median
+      range: [0, 10]
+    Weight:
+      impute: mean
+      range: [40, 150]
+    Height:
+      impute: mean
+      range: [130, 210]
+    Body mass index:
+      impute: fill_zero
+
+  categorical_cols:
+    Reason for absence:
+      impute: none
+      range: [0, 28]
+    Month of absence:
+      impute: none
+      range: [1, 12]
+    Day of the week:
+      impute: most_frequent
+      range: [1, 7]
+    Seasons:
+      impute: none
+      range: [1, 4]
+    Education:
+      impute: none
+      range: [1, 4]
+
+  boolean_cols:
+    - Disciplinary failure
+    - Social drinker
+    - Social smoker
+
+  target_col: "Absenteeism time in hours"
+
 features:
-  encode: onehot        # onehot|none
-  scale: standard       # standard|minmax|none
+  encode: onehot # onehot|none
+  scale: standard # standard|minmax|none
   drop_low_variance: true
   variance_thresh: 0.0
   new:
@@ -62,10 +131,10 @@ split:
   stratify: true
 
 model:
-  alg: "logreg"         # logreg|rf
+  alg: "logreg" # logreg|rf
   params:
     max_iter: 1000
 
 mlflow:
-  tracking_uri: "local"  # usa 'local' para la UI local: mlflow ui
+  tracking_uri: "local" # usa 'local' para la UI local: mlflow ui
   experiment: "absenteeism-baseline"
