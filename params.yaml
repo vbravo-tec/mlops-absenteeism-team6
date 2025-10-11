@@ -79,6 +79,51 @@ features:
   scale: standard # standard|minmax|none
   drop_low_variance: true
   variance_thresh: 0.0
+  new:
+    recompute_bmi:
+      enabled: true
+      formula: "Weight / ((Height/100)**2)"
+      output_col: "Body mass index"
+
+    dependents:
+      enabled: true
+      formula: "Son + Pet"
+      output_col: "Dependents_count"
+
+    has_dependents:
+      enabled: true
+      formula: "(Son + Pet) > 0"
+      output_col: "Has_dependents"
+
+    lifestyle_risk:
+      enabled: true
+      formula: "(`Social drinker` * 1.5) + (`Social smoker` * 2.0) + (`Pet` * 1.0) + (`Son` * 1.5) + (`Disciplinary failure` * 2.0)"
+      output_col: "Lifestyle_risk_score"
+
+    healthy_lifestyle:
+      enabled: true
+      formula: "(1 - `Social smoker`) + (1 - `Social drinker`) + ((`Body mass index` >= 18.5) & (`Body mass index` <= 25))"
+      output_col: "Healthy_lifestyle"
+
+    penalty_risk:
+      enabled: true
+      formula: "`Disciplinary failure` * (1 - (`Hit target` / 100))"
+      output_col: "Penalty_risk_score"
+
+    reliability:
+      enabled: true
+      formula: "1 / (1 + `Absenteeism time in hours`)"
+      output_col: "Reliability_score"
+
+    reliability_norm:
+      enabled: true
+      formula: "(Reliability_score - Reliability_score.min()) / (Reliability_score.max() - Reliability_score.min())"
+      output_col: "Reliability_score_norm"
+
+    workload_deviation:
+      enabled: true
+      formula: "`Work load Average/day` - `Work load Average/day`.mean()"
+      output_col: "Workload_deviation"
 
 split:
   test_size: 0.2
