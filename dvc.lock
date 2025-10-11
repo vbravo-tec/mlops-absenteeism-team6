@@ -11,8 +11,13 @@ stages:
       size: 79517
     - path: mlops/dataset.py
       hash: md5
+<<<<<<< Updated upstream
       md5: e48fb336180b64073ced5a5cd52234bd
       size: 5244
+=======
+      md5: f873371995c1403c023be3a74bd36e84
+      size: 7481
+>>>>>>> Stashed changes
     params:
       params.yaml:
         clean.drop_columns: []
@@ -35,8 +40,13 @@ stages:
       size: 25424
     - path: mlops/features.py
       hash: md5
+<<<<<<< Updated upstream
       md5: 1b27c5f3ea36bb0f0ade0de1cd55da69
       size: 2888
+=======
+      md5: bef1cf1e0c5a23ae43ea4ac694e3c929
+      size: 3887
+>>>>>>> Stashed changes
     params:
       params.yaml:
         features.drop_low_variance: true
@@ -46,8 +56,13 @@ stages:
     outs:
     - path: data/processed/absenteeism_features.parquet
       hash: md5
+<<<<<<< Updated upstream
       md5: 1a541eeab67d7165c70caabfb4124958
       size: 614778
+=======
+      md5: 26a2d61e5ac4915a73f46f3db4f34af9
+      size: 56670
+>>>>>>> Stashed changes
   split:
     cmd: python -m mlops.dataset --task split --input 
       data/processed/absenteeism_features.parquet --train 
@@ -55,12 +70,21 @@ stages:
     deps:
     - path: data/processed/absenteeism_features.parquet
       hash: md5
+<<<<<<< Updated upstream
       md5: 1a541eeab67d7165c70caabfb4124958
       size: 614778
     - path: mlops/dataset.py
       hash: md5
       md5: e48fb336180b64073ced5a5cd52234bd
       size: 5244
+=======
+      md5: 26a2d61e5ac4915a73f46f3db4f34af9
+      size: 56670
+    - path: mlops/dataset.py
+      hash: md5
+      md5: f873371995c1403c023be3a74bd36e84
+      size: 7481
+>>>>>>> Stashed changes
     params:
       params.yaml:
         split.random_state: 42
@@ -69,12 +93,21 @@ stages:
     outs:
     - path: data/processed/test.parquet
       hash: md5
+<<<<<<< Updated upstream
       md5: 6068376ee98cacfd12a876de2405d9aa
       size: 599481
     - path: data/processed/train.parquet
       hash: md5
       md5: d6806f85fe162b0479ce6e79fc1318b7
       size: 614723
+=======
+      md5: 4a3b1fcdfb33a8523e1a4d85ee95478b
+      size: 53598
+    - path: data/processed/train.parquet
+      hash: md5
+      md5: c0152f27303334bd325dd78b76c23fef
+      size: 57063
+>>>>>>> Stashed changes
   train_model:
     cmd: python -m mlops.modeling.train --train data/processed/train.parquet 
       --test data/processed/test.parquet --model-out models/model.pkl 
@@ -82,12 +115,21 @@ stages:
     deps:
     - path: data/processed/test.parquet
       hash: md5
+<<<<<<< Updated upstream
       md5: 6068376ee98cacfd12a876de2405d9aa
       size: 599481
     - path: data/processed/train.parquet
       hash: md5
       md5: d6806f85fe162b0479ce6e79fc1318b7
       size: 614723
+=======
+      md5: 4a3b1fcdfb33a8523e1a4d85ee95478b
+      size: 53598
+    - path: data/processed/train.parquet
+      hash: md5
+      md5: c0152f27303334bd325dd78b76c23fef
+      size: 57063
+>>>>>>> Stashed changes
     - path: mlops/modeling/train.py
       hash: md5
       md5: db90bdb753aba15f68357bd5b88275a2
@@ -106,5 +148,10 @@ stages:
       size: 43
     - path: models/model.pkl
       hash: md5
+<<<<<<< Updated upstream
       md5: 9bdfc661a175554a0e87b2b972cae6d6
       size: 28511
+=======
+      md5: 5ad366bcc7507600ceb0ec8300855a39
+      size: 3279
+>>>>>>> Stashed changes
