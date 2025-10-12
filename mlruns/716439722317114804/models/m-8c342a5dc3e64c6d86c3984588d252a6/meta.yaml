@@ -1,0 +1,10 @@
+artifact_location: file:///C:/Users/VeronicaAndreaBravoB/mlops-absenteeism-team6/mlruns/716439722317114804/models/m-8c342a5dc3e64c6d86c3984588d252a6/artifacts
+creation_timestamp: 1760283063017
+experiment_id: '716439722317114804'
+last_updated_timestamp: 1760283086596
+model_id: m-8c342a5dc3e64c6d86c3984588d252a6
+model_type: null
+name: model
+source_run_id: e36dcda70ee041f093cbffa623f769c5
+status: 3
+status_message: null
