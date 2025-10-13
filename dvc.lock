@@ -15,8 +15,8 @@ stages:
       size: 7481
     - path: params.yaml
       hash: md5
-      md5: 72600d7315a6ee5c0c7f65eafc222282
-      size: 3928
+      md5: de83a293102d80f66350dfd73049deb9
+      size: 4206
     params:
       params.yaml:
         clean.drop_columns:
@@ -27,7 +27,7 @@ stages:
     outs:
     - path: data/interim/absenteeism_clean.parquet
       hash: md5
-      md5: 94adc8c258881c1fc4c8eed6800da097
+      md5: b699e83e55da98212c4f5099c4c0ea65
       size: 15636
   features:
     cmd: python -m mlops.features --task build --input 
@@ -36,16 +36,16 @@ stages:
     deps:
     - path: data/interim/absenteeism_clean.parquet
       hash: md5
-      md5: 94adc8c258881c1fc4c8eed6800da097
+      md5: b699e83e55da98212c4f5099c4c0ea65
       size: 15636
     - path: mlops/features.py
       hash: md5
-      md5: bef1cf1e0c5a23ae43ea4ac694e3c929
-      size: 3887
+      md5: 48a7c3919e41b7c2f7fa5bd0f58e748f
+      size: 3883
     - path: params.yaml
       hash: md5
-      md5: 72600d7315a6ee5c0c7f65eafc222282
-      size: 3928
+      md5: de83a293102d80f66350dfd73049deb9
+      size: 4206
     params:
       params.yaml:
         features.drop_low_variance: true
@@ -55,7 +55,7 @@ stages:
     outs:
     - path: data/processed/absenteeism_features.parquet
       hash: md5
-      md5: 26a2d61e5ac4915a73f46f3db4f34af9
+      md5: 1fc3d8133614b706d13890cc9541031e
       size: 56670
   split:
     cmd: python -m mlops.dataset --task split --input 
@@ -64,7 +64,7 @@ stages:
     deps:
     - path: data/processed/absenteeism_features.parquet
       hash: md5
-      md5: 26a2d61e5ac4915a73f46f3db4f34af9
+      md5: 1fc3d8133614b706d13890cc9541031e
       size: 56670
     - path: mlops/dataset.py
       hash: md5
@@ -72,8 +72,8 @@ stages:
       size: 7481
     - path: params.yaml
       hash: md5
-      md5: 72600d7315a6ee5c0c7f65eafc222282
-      size: 3928
+      md5: de83a293102d80f66350dfd73049deb9
+      size: 4206
     params:
       params.yaml:
         split.random_state: 42
@@ -82,11 +82,11 @@ stages:
     outs:
     - path: data/processed/test.parquet
       hash: md5
-      md5: 4a3b1fcdfb33a8523e1a4d85ee95478b
+      md5: e7e38a6bc1060e43874ddc8a34539b6c
       size: 53598
     - path: data/processed/train.parquet
       hash: md5
-      md5: c0152f27303334bd325dd78b76c23fef
+      md5: 8ce5c415e73ef72f65e5f5c3ba14560c
       size: 57063
   train_model:
     cmd: python -m mlops.modeling.train --train data/processed/train.parquet 
@@ -95,11 +95,11 @@ stages:
     deps:
     - path: data/processed/test.parquet
       hash: md5
-      md5: 4a3b1fcdfb33a8523e1a4d85ee95478b
+      md5: e7e38a6bc1060e43874ddc8a34539b6c
       size: 53598
     - path: data/processed/train.parquet
       hash: md5
-      md5: c0152f27303334bd325dd78b76c23fef
+      md5: 8ce5c415e73ef72f65e5f5c3ba14560c
       size: 57063
     - path: mlops/modeling/train.py
       hash: md5
@@ -107,8 +107,8 @@ stages:
       size: 2659
     - path: params.yaml
       hash: md5
-      md5: 72600d7315a6ee5c0c7f65eafc222282
-      size: 3928
+      md5: de83a293102d80f66350dfd73049deb9
+      size: 4206
     params:
       params.yaml:
         mlflow.experiment: absenteeism-baseline
@@ -123,5 +123,5 @@ stages:
       size: 73
     - path: models/model.pkl
       hash: md5
-      md5: 5ad366bcc7507600ceb0ec8300855a39
-      size: 3279
+      md5: 156f6ee77b0de40c317347e6e84375aa
+      size: 3631
