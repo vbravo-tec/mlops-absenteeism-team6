@@ -3,6 +3,7 @@ __pycache__/
 *.py[codz]
 *$py.class
 .venv/
+mlruns/
 
 # C extensions
 *.so
@@ -207,3 +208,7 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 /metrics.json
+
+
+#Ml Runs
+mlruns/
