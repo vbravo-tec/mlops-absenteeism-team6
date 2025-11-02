@@ -11,19 +11,24 @@ stages:
       size: 79517
     - path: mlops/dataset.py
       hash: md5
-      md5: e48fb336180b64073ced5a5cd52234bd
-      size: 5244
+      md5: f873371995c1403c023be3a74bd36e84
+      size: 7481
+    - path: params.yaml
+      hash: md5
+      md5: de83a293102d80f66350dfd73049deb9
+      size: 4206
     params:
       params.yaml:
-        clean.drop_columns: []
-        clean.impute: mean
+        clean.drop_columns:
+        - ID
+        - mixed_type_col
         clean.outliers.method: iqr
         clean.outliers.z_thresh: 3.0
     outs:
     - path: data/interim/absenteeism_clean.parquet
       hash: md5
-      md5: 4a564e64b9c9aef36a8de2bd9cf62408
-      size: 25424
+      md5: b699e83e55da98212c4f5099c4c0ea65
+      size: 15636
   features:
     cmd: python -m mlops.features --task build --input 
       data/interim/absenteeism_clean.parquet --output 
@@ -31,12 +36,16 @@ stages:
     deps:
     - path: data/interim/absenteeism_clean.parquet
       hash: md5
-      md5: 4a564e64b9c9aef36a8de2bd9cf62408
-      size: 25424
+      md5: b699e83e55da98212c4f5099c4c0ea65
+      size: 15636
     - path: mlops/features.py
       hash: md5
-      md5: 1b27c5f3ea36bb0f0ade0de1cd55da69
-      size: 2888
+      md5: 48a7c3919e41b7c2f7fa5bd0f58e748f
+      size: 3883
+    - path: params.yaml
+      hash: md5
+      md5: de83a293102d80f66350dfd73049deb9
+      size: 4206
     params:
       params.yaml:
         features.drop_low_variance: true
@@ -46,8 +55,8 @@ stages:
     outs:
     - path: data/processed/absenteeism_features.parquet
       hash: md5
-      md5: 1a541eeab67d7165c70caabfb4124958
-      size: 614778
+      md5: 1fc3d8133614b706d13890cc9541031e
+      size: 56670
   split:
     cmd: python -m mlops.dataset --task split --input 
       data/processed/absenteeism_features.parquet --train 
@@ -55,12 +64,16 @@ stages:
     deps:
     - path: data/processed/absenteeism_features.parquet
       hash: md5
-      md5: 1a541eeab67d7165c70caabfb4124958
-      size: 614778
+      md5: 1fc3d8133614b706d13890cc9541031e
+      size: 56670
     - path: mlops/dataset.py
       hash: md5
-      md5: e48fb336180b64073ced5a5cd52234bd
-      size: 5244
+      md5: f873371995c1403c023be3a74bd36e84
+      size: 7481
+    - path: params.yaml
+      hash: md5
+      md5: de83a293102d80f66350dfd73049deb9
+      size: 4206
     params:
       params.yaml:
         split.random_state: 42
@@ -69,12 +82,12 @@ stages:
     outs:
     - path: data/processed/test.parquet
       hash: md5
-      md5: 6068376ee98cacfd12a876de2405d9aa
-      size: 599481
+      md5: e7e38a6bc1060e43874ddc8a34539b6c
+      size: 53598
     - path: data/processed/train.parquet
       hash: md5
-      md5: d6806f85fe162b0479ce6e79fc1318b7
-      size: 614723
+      md5: 8ce5c415e73ef72f65e5f5c3ba14560c
+      size: 57063
   train_model:
     cmd: python -m mlops.modeling.train --train data/processed/train.parquet 
       --test data/processed/test.parquet --model-out models/model.pkl 
@@ -82,16 +95,20 @@ stages:
     deps:
     - path: data/processed/test.parquet
       hash: md5
-      md5: 6068376ee98cacfd12a876de2405d9aa
-      size: 599481
+      md5: e7e38a6bc1060e43874ddc8a34539b6c
+      size: 53598
     - path: data/processed/train.parquet
       hash: md5
-      md5: d6806f85fe162b0479ce6e79fc1318b7
-      size: 614723
+      md5: 8ce5c415e73ef72f65e5f5c3ba14560c
+      size: 57063
     - path: mlops/modeling/train.py
       hash: md5
-      md5: db90bdb753aba15f68357bd5b88275a2
-      size: 2679
+      md5: 05162cbad088135e04e8393c739ed7ed
+      size: 2659
+    - path: params.yaml
+      hash: md5
+      md5: de83a293102d80f66350dfd73049deb9
+      size: 4206
     params:
       params.yaml:
         mlflow.experiment: absenteeism-baseline
@@ -102,9 +119,9 @@ stages:
     outs:
     - path: metrics.json
       hash: md5
-      md5: 06e789be1b3dc555720d013157e47084
-      size: 43
+      md5: 129a7c741155cc57b4b7043fc29471b3
+      size: 73
     - path: models/model.pkl
       hash: md5
-      md5: 9bdfc661a175554a0e87b2b972cae6d6
-      size: 28511
+      md5: 156f6ee77b0de40c317347e6e84375aa
+      size: 3631

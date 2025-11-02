@@ -1,1 +1,5 @@
 /model.pkl
+# Ignorar archivos binarios de modelos
+*.pkl
+*.joblib
+*.h5

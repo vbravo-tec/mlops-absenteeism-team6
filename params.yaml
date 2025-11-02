@@ -1,15 +1,129 @@
 clean:
-  impute: mean          # mean|median|most_frequent|none
-  drop_columns: []      # ["ID", ...] si aplica
+  drop_columns: ["ID", "mixed_type_col"]
   outliers:
-    method: iqr         # iqr|zscore|none
+    method: iqr # iqr|zscore|none
     z_thresh: 3.0
 
+    # ──────────────────────────────────────────────────────────────
+    # Imputation strategies for missing or invalid values:
+    #
+    #   mean          → Replace missing values with the column mean
+    #   median        → Replace missing values with the column median
+    #   most_frequent → Replace missing values with the most common (mode)
+    #   fill_zero     → Replace missing values with 0
+    #   none          → Do not impute; rows with missing values are removed
+    #
+    # Example:
+    #   Age:
+    #     impute: mean
+    #     range: [18, 65]
+    #
+    # ──────────────────────────────────────────────────────────────
+
+  numeric_cols:
+    Transportation expense:
+      impute: mean
+    Distance from Residence to Work:
+      impute: mean
+    Service time:
+      impute: mean
+    Age:
+      impute: mean
+      range: [18, 65]
+    Work load Average/day:
+      impute: mean
+    Hit target:
+      impute: mean
+      range: [0, 100]
+    Son:
+      impute: median
+      range: [0, 10]
+    Pet:
+      impute: median
+      range: [0, 10]
+    Weight:
+      impute: mean
+      range: [40, 150]
+    Height:
+      impute: mean
+      range: [130, 210]
+    Body mass index:
+      impute: fill_zero
+
+  categorical_cols:
+    Reason for absence:
+      impute: none
+      range: [0, 28]
+    Month of absence:
+      impute: none
+      range: [1, 12]
+    Day of the week:
+      impute: most_frequent
+      range: [1, 7]
+    Seasons:
+      impute: none
+      range: [1, 4]
+    Education:
+      impute: none
+      range: [1, 4]
+
+  boolean_cols:
+    - Disciplinary failure
+    - Social drinker
+    - Social smoker
+
+  target_col: "Absenteeism time in hours"
+
 features:
-  encode: onehot        # onehot|none
-  scale: standard       # standard|minmax|none
+  encode: onehot # onehot|none
+  scale: standard # standard|minmax|none
   drop_low_variance: true
   variance_thresh: 0.0
+  new:
+    recompute_bmi:
+      enabled: true
+      formula: "Weight / ((Height/100)**2)"
+      output_col: "Body mass index"
+
+    dependents:
+      enabled: true
+      formula: "Son + Pet"
+      output_col: "Dependents_count"
+
+    has_dependents:
+      enabled: true
+      formula: "(Son + Pet) > 0"
+      output_col: "Has_dependents"
+
+    lifestyle_risk:
+      enabled: true
+      formula: "(`Social drinker` * 1.5) + (`Social smoker` * 2.0) + (`Pet` * 1.0) + (`Son` * 1.5) + (`Disciplinary failure` * 2.0)"
+      output_col: "Lifestyle_risk_score"
+
+    healthy_lifestyle:
+      enabled: true
+      formula: "(1 - `Social smoker`) + (1 - `Social drinker`) + ((`Body mass index` >= 18.5) & (`Body mass index` <= 25))"
+      output_col: "Healthy_lifestyle"
+
+    penalty_risk:
+      enabled: true
+      formula: "`Disciplinary failure` * (1 - (`Hit target` / 100))"
+      output_col: "Penalty_risk_score"
+
+    reliability:
+      enabled: true
+      formula: "1 / (1 + `Absenteeism time in hours`)"
+      output_col: "Reliability_score"
+
+    reliability_norm:
+      enabled: true
+      formula: "(Reliability_score - Reliability_score.min()) / (Reliability_score.max() - Reliability_score.min())"
+      output_col: "Reliability_score_norm"
+
+    workload_deviation:
+      enabled: true
+      formula: "`Work load Average/day` - `Work load Average/day`.mean()"
+      output_col: "Workload_deviation"
 
 split:
   test_size: 0.2
@@ -17,10 +131,26 @@ split:
   stratify: true
 
 model:
-  alg: "logreg"         # logreg|rf
+  alg: "logreg" # logreg|rf
   params:
     max_iter: 1000
 
 mlflow:
-  tracking_uri: "local"  # usa 'local' para la UI local: mlflow ui
+  tracking_uri: "local" # usa 'local' para la UI local: mlflow ui
   experiment: "absenteeism-baseline"
+
+base:
+  random_state: 42
+
+data_cleaning:
+  input_file: data/raw/initial_data.csv
+  columns_to_drop:
+    - Unnamed: 0
+
+train:
+  test_size: 0.2
+  
+  # Hiperparámetros del modelo Random Forest Regularizado
+  n_estimators: 150
+  max_depth: 8
+  min_samples_leaf: 5
