@@ -56,3 +56,19 @@ stages:
       - models/model.pkl
     metrics:
       - metrics.json
+
+  evaluate:
+    cmd: python -m mlops.modeling.evaluate --model models/model.pkl --test data/processed/test.parquet --report reports/evaluation.json
+    deps:
+      - mlops/modeling/evaluate.py
+      - models/model.pkl
+      - data/processed/test.parquet
+    outs:
+      - reports/evaluation.json
+
+  register_model:
+    cmd: python -m mlops.modeling.register_model --model models/model.pkl --metrics metrics.json
+    deps:
+      - mlops/modeling/register_model.py
+      - models/model.pkl
+      - metrics.json

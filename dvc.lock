@@ -27,7 +27,7 @@ stages:
     outs:
     - path: data/interim/absenteeism_clean.parquet
       hash: md5
-      md5: b699e83e55da98212c4f5099c4c0ea65
+      md5: 92a79eba1d04f533e1a4a434b43b2a2b
       size: 15636
   features:
     cmd: python -m mlops.features --task build --input 
@@ -36,7 +36,7 @@ stages:
     deps:
     - path: data/interim/absenteeism_clean.parquet
       hash: md5
-      md5: b699e83e55da98212c4f5099c4c0ea65
+      md5: 92a79eba1d04f533e1a4a434b43b2a2b
       size: 15636
     - path: mlops/features.py
       hash: md5
@@ -55,7 +55,7 @@ stages:
     outs:
     - path: data/processed/absenteeism_features.parquet
       hash: md5
-      md5: 1fc3d8133614b706d13890cc9541031e
+      md5: 6560cdb54db046f4d1b172c285428bd2
       size: 56670
   split:
     cmd: python -m mlops.dataset --task split --input 
@@ -64,7 +64,7 @@ stages:
     deps:
     - path: data/processed/absenteeism_features.parquet
       hash: md5
-      md5: 1fc3d8133614b706d13890cc9541031e
+      md5: 6560cdb54db046f4d1b172c285428bd2
       size: 56670
     - path: mlops/dataset.py
       hash: md5
@@ -82,12 +82,12 @@ stages:
     outs:
     - path: data/processed/test.parquet
       hash: md5
-      md5: e7e38a6bc1060e43874ddc8a34539b6c
-      size: 53598
+      md5: da5f11fdfebb5f9bd3f2d78a997b4e0c
+      size: 53638
     - path: data/processed/train.parquet
       hash: md5
-      md5: 8ce5c415e73ef72f65e5f5c3ba14560c
-      size: 57063
+      md5: 607ae971a54f9c6e03e429cf8dc83eae
+      size: 57103
   train_model:
     cmd: python -m mlops.modeling.train --train data/processed/train.parquet 
       --test data/processed/test.parquet --model-out models/model.pkl 
@@ -95,16 +95,16 @@ stages:
     deps:
     - path: data/processed/test.parquet
       hash: md5
-      md5: e7e38a6bc1060e43874ddc8a34539b6c
-      size: 53598
+      md5: da5f11fdfebb5f9bd3f2d78a997b4e0c
+      size: 53638
     - path: data/processed/train.parquet
       hash: md5
-      md5: 8ce5c415e73ef72f65e5f5c3ba14560c
-      size: 57063
+      md5: 607ae971a54f9c6e03e429cf8dc83eae
+      size: 57103
     - path: mlops/modeling/train.py
       hash: md5
-      md5: 05162cbad088135e04e8393c739ed7ed
-      size: 2659
+      md5: 603bd0f174eb232c782281d3a0a11085
+      size: 3445
     - path: params.yaml
       hash: md5
       md5: de83a293102d80f66350dfd73049deb9
@@ -119,9 +119,46 @@ stages:
     outs:
     - path: metrics.json
       hash: md5
-      md5: 129a7c741155cc57b4b7043fc29471b3
-      size: 73
+      md5: 43f5785ab7e86c60b8ace493af0e5804
+      size: 107
     - path: models/model.pkl
       hash: md5
-      md5: 156f6ee77b0de40c317347e6e84375aa
-      size: 3631
+      md5: 9232df814f38a989b0e7dc1bdcde75f9
+      size: 3327
+  evaluate:
+    cmd: python -m mlops.modeling.evaluate --model models/model.pkl --test 
+      data/processed/test.parquet --report reports/evaluation.json
+    deps:
+    - path: data/processed/test.parquet
+      hash: md5
+      md5: da5f11fdfebb5f9bd3f2d78a997b4e0c
+      size: 53638
+    - path: mlops/modeling/evaluate.py
+      hash: md5
+      md5: f99f5c0e7b018782764e71eae594a44a
+      size: 1541
+    - path: models/model.pkl
+      hash: md5
+      md5: 9232df814f38a989b0e7dc1bdcde75f9
+      size: 3327
+    outs:
+    - path: reports/evaluation.json
+      hash: md5
+      md5: ec1ddab1a08e37fa102789317797e6ae
+      size: 834
+  register_model:
+    cmd: python -m mlops.modeling.register_model --model models/model.pkl 
+      --metrics metrics.json
+    deps:
+    - path: metrics.json
+      hash: md5
+      md5: 43f5785ab7e86c60b8ace493af0e5804
+      size: 107
+    - path: mlops/modeling/register_model.py
+      hash: md5
+      md5: c6b776c4da5cca56b645a30fcf9d168e
+      size: 1188
+    - path: models/model.pkl
+      hash: md5
+      md5: 9232df814f38a989b0e7dc1bdcde75f9
+      size: 3327

@@ -1,14 +1,13 @@
 import argparse
 import json
 from pathlib import Path
-
 import mlflow
 import mlflow.sklearn
 import pandas as pd
 import yaml
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, f1_score
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, f1_score
 import joblib
 
 
@@ -47,41 +46,58 @@ def main():
     X_test, y_test = load_xy(args.test)
 
     mcfg = P.get("model", {})
-    alg = mcfg.get("alg", "logreg")
-    params = mcfg.get("params", {"max_iter": 1000})
+    alg = mcfg.get("alg", "random_forest")
+    params = mcfg.get("params", {"n_estimators": 100, "max_depth": 5})
 
-    mlf = P.get("mlflow", {})
-    tracking_uri = mlf.get("tracking_uri", "local")
-    experiment = mlf.get("experiment", "absenteeism-baseline")
-
-    if tracking_uri != "local":
-        mlflow.set_tracking_uri(tracking_uri)
+    # --- Configuración MLflow ---
+    # --- Configuración de MLflow ---
+    mlflow.set_tracking_uri("file:./mlruns")
+    experiment = P.get("mlflow", {}).get("experiment", "Absenteeism_Model_Training")
     mlflow.set_experiment(experiment)
 
-    with mlflow.start_run():
+    with mlflow.start_run(run_name=f"{alg}_Absenteeism"):
+        # 🔹 1. Registrar parámetros
         mlflow.log_params({"alg": alg, **params})
 
+        # 🔹 2. Entrenar el modelo
         model = get_model(alg, params)
         model.fit(X_train, y_train)
 
+        # 🔹 3. Calcular métricas
         y_pred = model.predict(X_test)
         acc = float(accuracy_score(y_test, y_pred))
         f1 = float(f1_score(y_test, y_pred, average="macro"))
 
+        # Si el modelo tiene predict_proba (ej. RandomForest)
+        if hasattr(model, "predict_proba"):
+            from sklearn.metrics import roc_auc_score
+
+            auc = float(roc_auc_score(y_test, model.predict_proba(X_test)[:, 1]))
+        else:
+            auc = None
+
         metrics = {"accuracy": acc, "f1_macro": f1}
+        if auc is not None:
+            metrics["roc_auc"] = auc
+
+        # 🔹 4. Guardar métricas en archivo JSON
         Path(args.metrics_out).parent.mkdir(parents=True, exist_ok=True)
         with open(args.metrics_out, "w", encoding="utf-8") as f:
             json.dump(metrics, f, indent=2)
 
-        # log MLflow
-        mlflow.log_metrics(metrics)
-        mlflow.sklearn.log_model(model, "model")
-
-        # guarda modelo para el artefacto del pipeline
+        # 🔹 5. Guardar modelo antes de loguearlo
         Path(args.model_out).parent.mkdir(parents=True, exist_ok=True)
         joblib.dump(model, args.model_out)
 
-        print(f"[train] saved {args.model_out} | metrics={metrics}")
+        # 🔹 6. Registrar resultados en MLflow
+        mlflow.log_metrics(metrics)
+        mlflow.sklearn.log_model(model, "model")
+        mlflow.log_artifact(args.metrics_out)
+        mlflow.log_artifact(args.model_out)
+
+        print(f"\n[train] ✅ saved {args.model_out}")
+        print(f"[train] 📊 metrics={metrics}")
+        print("✅ Registro en MLflow completado con éxito.\n")
 
 
 if __name__ == "__main__":

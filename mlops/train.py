@@ -5,6 +5,8 @@ import yaml
 import os
 import json
 import joblib  # Para guardar el modelo y el escalador
+import mlflow
+import mlflow.sklearn
 
 # Clases de Scikit-learn para el preprocesamiento y el modelo
 from sklearn.model_selection import train_test_split
@@ -114,3 +116,28 @@ print(f"  Accuracy: {accuracy:.4f}")
 print(f"  F1-Score: {f1:.4f}")
 print(f"  ROC AUC: {roc_auc:.4f}")
 print("\nScript de entrenamiento finalizado exitosamente. ¡Listo para 'dvc repro'!")
+
+
+# --- 8. Registro de experimento con MLflow ---
+
+
+print("\nRegistrando experimento en MLflow...")
+
+mlflow.set_experiment("Absenteeism_Model_Training")
+
+with mlflow.start_run(run_name="RandomForest_Absenteeism"):
+    mlflow.log_param("n_estimators", params["train"]["n_estimators"])
+    mlflow.log_param("max_depth", params["train"]["max_depth"])
+    mlflow.log_param("min_samples_leaf", params["train"]["min_samples_leaf"])
+    mlflow.log_param("test_size", params["train"]["test_size"])
+    mlflow.log_param("random_state", params["base"]["random_state"])
+
+    mlflow.log_metric("accuracy", accuracy)
+    mlflow.log_metric("f1_score", f1)
+    mlflow.log_metric("roc_auc", roc_auc)
+
+    mlflow.sklearn.log_model(model, "model")
+    mlflow.log_artifact(scaler_path)
+    mlflow.log_artifact(metrics_path)
+
+print("✅ Registro en MLflow completado con éxito.")
