@@ -213,3 +213,8 @@ __marimo__/
 # Mlruns
 mlruns/
 gt 
+
+
+# Ignorar todos los JSON de reports salvo los controlados por DVC
+/reports/*.json
+!/reports/*.json.dvc
