@@ -7,12 +7,14 @@ import pandas as pd
 import yaml
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
+from sklearn.metrics import accuracy_score, f1_score
 import joblib
+
 
 def load_params():
     with open("params.yaml", "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
+
 
 def load_xy(parquet_path):
     df = pd.read_parquet(parquet_path)
@@ -21,6 +23,7 @@ def load_xy(parquet_path):
     y = df["target"]
     return X, y
 
+
 def get_model(alg, params):
     if alg == "logreg":
         return LogisticRegression(**params)
@@ -28,6 +31,7 @@ def get_model(alg, params):
         return RandomForestClassifier(**params)
     else:
         raise ValueError(f"Modelo no soportado: {alg}")
+
 
 def main():
     ap = argparse.ArgumentParser()
@@ -46,7 +50,7 @@ def main():
     params = mcfg.get("params", {"n_estimators": 100, "max_depth": 5})
 
     # --- Configuración MLflow ---
-        # --- Configuración de MLflow ---
+    # --- Configuración de MLflow ---
     mlflow.set_tracking_uri("file:./mlruns")
     experiment = P.get("mlflow", {}).get("experiment", "Absenteeism_Model_Training")
     mlflow.set_experiment(experiment)
@@ -67,6 +71,7 @@ def main():
         # Si el modelo tiene predict_proba (ej. RandomForest)
         if hasattr(model, "predict_proba"):
             from sklearn.metrics import roc_auc_score
+
             auc = float(roc_auc_score(y_test, model.predict_proba(X_test)[:, 1]))
         else:
             auc = None
@@ -93,6 +98,7 @@ def main():
         print(f"\n[train] ✅ saved {args.model_out}")
         print(f"[train] 📊 metrics={metrics}")
         print("✅ Registro en MLflow completado con éxito.\n")
+
 
 if __name__ == "__main__":
     main()

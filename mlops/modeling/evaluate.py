@@ -2,11 +2,8 @@ import argparse
 import json
 import joblib
 import pandas as pd
-from sklearn.metrics import (
-    classification_report,
-    confusion_matrix,
-    roc_auc_score
-)
+from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -50,6 +47,7 @@ def main():
         json.dump(results, f, indent=2)
 
     print(f"[evaluate] ✅ Reporte guardado en {args.report}")
+
 
 if __name__ == "__main__":
     main()

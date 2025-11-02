@@ -3,7 +3,7 @@ import json
 import joblib
 import mlflow
 import mlflow.sklearn
-import os
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -28,12 +28,13 @@ def main():
         mlflow.sklearn.log_model(model, artifact_path="model")
 
         model_name = "Absenteeism-BestModel"
-        result = mlflow.register_model(
+        mlflow.register_model(
             model_uri=f"runs:/{mlflow.active_run().info.run_id}/model",
             name=model_name,
         )
 
         print(f"[register_model] ✅ Modelo registrado en MLflow Registry como '{model_name}'")
+
 
 if __name__ == "__main__":
     main()
