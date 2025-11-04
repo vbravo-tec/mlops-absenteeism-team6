@@ -56,7 +56,7 @@ def register_best():
     best_run_id = best_run.run_id
     best_metric_value = best_run[f"metrics.{METRIC_TO_OPTIMIZE}"]
 
-    print(f"\n🏆 Mejor 'run' encontrado:")
+    print("\n🏆 Mejor 'run' encontrado:")
     print(f"   Run ID: {best_run_id}")
     print(f"   Métrica ({METRIC_TO_OPTIMIZE}): {best_metric_value:.4f}")
     print(f"   Algoritmo (param.alg): {best_run.get('params.alg')}")
@@ -73,7 +73,7 @@ def register_best():
         name=REGISTERED_MODEL_NAME
     )
     
-    print(f"\n✅ ¡Éxito! Modelo registrado.")
+    print("\n✅ ¡Éxito! Modelo registrado.")
     print(f"   Nombre: {registered_model_info.name}")
     print(f"   Versión: {registered_model_info.version}")
 
