@@ -65,7 +65,7 @@ def register_best():
     print(f"\nRegistrando este modelo como: '{REGISTERED_MODEL_NAME}'")
     
     # Construir la URI del artefacto del modelo (dentro del 'run')
-    model_uri = f"runs:/{best_run_id}/model" 
+    model_uri = print(f"runs:/{best_run_id}/model" )
     
     # Registrarlo
     registered_model_info = mlflow.register_model(
