@@ -67,8 +67,13 @@ stages:
       - reports/evaluation.json
 
   register_model:
-    cmd: python -m mlops.modeling.register_model --model models/model.pkl --metrics metrics.json
+    cmd: python -m mlops.modeling.register_model
     deps:
       - mlops/modeling/register_model.py
+      - params.yaml
+      # Aún dependemos de estos archivos para
+      # forzar que 'train_model' se ejecute ANTES.
       - models/model.pkl
       - metrics.json
+
+      
