@@ -3,12 +3,13 @@ import yaml
 import sys
 from mlflow.entities import ViewType
 
+
 def register_best():
     """
     Busca en todos los 'runs' del experimento, encuentra el mejor
     según 'METRIC_TO_OPTIMIZE' y lo registra en el "Model Registry".
     """
-    
+
     # --- 1. Configuración ---
     # Cargar params.yaml para saber el nombre del experimento
     try:
@@ -17,14 +18,14 @@ def register_best():
     except FileNotFoundError:
         print("Error: No se encontró 'params.yaml'. Asegúrate de estar en el dir raíz.")
         sys.exit(1)
-        
+
     MLFLOW_TRACKING_URI = "file:./mlruns"
     EXPERIMENT_NAME = P.get("mlflow", {}).get("experiment", "Absenteeism_Model_Training")
     REGISTERED_MODEL_NAME = "Absenteeism-BestModel"
-    
+
     # ¡Importante! La métrica que decide cuál es el "mejor" modelo.
     # Usamos 'roc_auc' porque 'accuracy' puede ser engañoso.
-    METRIC_TO_OPTIMIZE = "roc_auc" 
+    METRIC_TO_OPTIMIZE = "roc_auc"
 
     mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
     mlflow.set_experiment(EXPERIMENT_NAME)
@@ -39,7 +40,7 @@ def register_best():
         runs = mlflow.search_runs(
             experiment_names=[EXPERIMENT_NAME],
             run_view_type=ViewType.ACTIVE_ONLY,
-            order_by=[f"metrics.{METRIC_TO_OPTIMIZE} DESC"]
+            order_by=[f"metrics.{METRIC_TO_OPTIMIZE} DESC"],
         )
     except Exception as e:
         print(f"Error al buscar 'runs': {e}")
@@ -63,19 +64,17 @@ def register_best():
 
     # --- 3. Registrar el modelo de ESE 'run' ---
     print(f"\nRegistrando este modelo como: '{REGISTERED_MODEL_NAME}'")
-    
+
     # Construir la URI del artefacto del modelo (dentro del 'run')
-    model_uri = print(f"runs:/{best_run_id}/model" )
-    
+    model_uri = print(f"runs:/{best_run_id}/model")
+
     # Registrarlo
-    registered_model_info = mlflow.register_model(
-        model_uri=model_uri,
-        name=REGISTERED_MODEL_NAME
-    )
-    
+    registered_model_info = mlflow.register_model(model_uri=model_uri, name=REGISTERED_MODEL_NAME)
+
     print("\n✅ ¡Éxito! Modelo registrado.")
     print(f"   Nombre: {registered_model_info.name}")
     print(f"   Versión: {registered_model_info.version}")
+
 
 if __name__ == "__main__":
     # Eliminamos la lógica de 'argparse' porque ya no la necesitamos

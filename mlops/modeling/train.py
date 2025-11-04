@@ -27,22 +27,20 @@ def load_xy(parquet_path):
 
 def get_model(alg, params):
     if alg == "logreg":
-        model_step = ('classifier', LogisticRegression(**params))
+        model_step = ("classifier", LogisticRegression(**params))
     elif alg in ("rf", "random_forest"):
-        model_step = ('classifier', RandomForestClassifier(**params))
+        model_step = ("classifier", RandomForestClassifier(**params))
     else:
         raise ValueError(f"Modelo no soportado: {alg}")
     # Creamos un Pipeline.
     # Aquí es donde podrías añadir más pasos de preprocesamiento, ej:
     # steps = [
-    #     ('scaler', StandardScaler()), 
+    #     ('scaler', StandardScaler()),
     #     model_step
     # ]
     # Por ahora, solo contiene el clasificador
     steps = [model_step]
     return Pipeline(steps)
-
-
 
 
 def main():
@@ -103,16 +101,16 @@ def main():
 
         # 🔹 6. Registrar resultados en MLflow
         mlflow.log_metrics(metrics)
-           # Registramos el modelo con el schema (input_example) y un nombre oficial
+        # Registramos el modelo con el schema (input_example) y un nombre oficial
         print("Registrando modleo en MLflow con schema y nombre...")
         mlflow.sklearn.log_model(
-            sk_model=model,                         # El Pipeline entrenado
-            artifact_path="model",                  # Dónde guardarlo dentro de la ejecución (run)
-            input_example=X_train.head(),           # <-- La clave para el Schema 
+            sk_model=model,  # El Pipeline entrenado
+            artifact_path="model",  # Dónde guardarlo dentro de la ejecución (run)
+            input_example=X_train.head(),  # <-- La clave para el Schema
         )
         mlflow.log_artifact(args.metrics_out)
         mlflow.log_artifact(args.model_out)
-    
+
 
 if __name__ == "__main__":
     main()
