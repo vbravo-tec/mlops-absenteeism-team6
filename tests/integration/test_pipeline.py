@@ -28,8 +28,8 @@ def test_clean_stage(tmp_path):
 @pytest.mark.integration
 def test_train_stage(tmp_path):
     """Ejecuta la etapa de entrenamiento y verifica métricas."""
-    train_path = "data/processed/train.parquet"
-    test_path = "data/processed/test.parquet"
+    train_path = "tests/integration/test_data/train.parquet"
+    test_path = "tests/integration/test_data/test.parquet"
     model_out = tmp_path / "model.pkl"
     metrics_out = tmp_path / "metrics.json"
 
