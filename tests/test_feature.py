@@ -1,19 +1,14 @@
-import sys, os
+import sys
+import os
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import pytest
 import pandas as pd
-import numpy as np
 import yaml
-from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
-from mlops.features import (
-    ParamLoader,
-    FeatureEngineer,
-    FeaturePreprocessor,
-    FeatureBuilder
-)
+from mlops.features import ParamLoader, FeatureEngineer, FeaturePreprocessor, FeatureBuilder
 
 
 @pytest.fixture
@@ -23,12 +18,12 @@ def sample_yaml(tmp_path):
         "features": {
             "new": {
                 "feature_sum": {"enabled": True, "formula": "a + b"},
-                "feature_flag": {"enabled": True, "formula": "a > 1"}
+                "feature_flag": {"enabled": True, "formula": "a > 1"},
             },
             "encode": "onehot",
             "scale": "standard",
             "drop_low_variance": True,
-            "variance_thresh": 0.0
+            "variance_thresh": 0.0,
         }
     }
     yaml_path = tmp_path / "params.yaml"
@@ -40,12 +35,9 @@ def sample_yaml(tmp_path):
 @pytest.fixture
 def sample_df():
     """Crea un DataFrame de prueba."""
-    return pd.DataFrame({
-        "a": [1, 2, 3],
-        "b": [4, 5, 6],
-        "category": ["x", "y", "z"],
-        "target": [0, 1, 0]
-    })
+    return pd.DataFrame(
+        {"a": [1, 2, 3], "b": [4, 5, 6], "category": ["x", "y", "z"], "target": [0, 1, 0]}
+    )
 
 
 def test_param_loader_reads_yaml(sample_yaml):
@@ -92,7 +84,7 @@ def test_feature_builder_creates_output_file(tmp_path, sample_df, sample_yaml):
     params = ParamLoader(path=sample_yaml).params
 
     builder = FeatureBuilder(input_path, output_path, params)
-    
+
     with patch.object(FeatureEngineer, "create_behavioral_features", return_value=sample_df):
         builder.run()
 
@@ -104,13 +96,7 @@ def test_feature_builder_creates_output_file(tmp_path, sample_df, sample_yaml):
 
 def test_feature_engineer_handles_missing_formula(sample_df):
     """Verifica que se maneje correctamente una feature sin fórmula."""
-    params = {
-        "features": {
-            "new": {
-                "no_formula": {"enabled": True}
-            }
-        }
-    }
+    params = {"features": {"new": {"no_formula": {"enabled": True}}}}
     fe = FeatureEngineer(params)
     with patch("builtins.print") as mock_print:
         df = fe.create_behavioral_features(sample_df)
@@ -134,5 +120,7 @@ def test_feature_preprocessor_drops_low_variance(sample_df, sample_yaml):
     preprocessor = FeaturePreprocessor(params)
     X = sample_df[["a", "b"]]
     X_processed = preprocessor.fit_transform(X)
-    assert X_processed.shape[1] == 0 or X_processed.var().min() <= params["features"]["variance_thresh"]
-
+    assert (
+        X_processed.shape[1] == 0
+        or X_processed.var().min() <= params["features"]["variance_thresh"]
+    )

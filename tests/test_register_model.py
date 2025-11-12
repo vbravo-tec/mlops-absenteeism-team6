@@ -1,17 +1,14 @@
-import sys, os
+import sys
+import os
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import pytest
 import json
 import joblib
-from pathlib import Path
 from unittest.mock import patch, MagicMock
 
-from mlops.modeling.register_model import (
-    ModelLoader,
-    MetricsLoader,
-    MLflowRegistrar
-)
+from mlops.modeling.register_model import ModelLoader, MetricsLoader, MLflowRegistrar
 
 
 class DummyModel:
@@ -26,7 +23,6 @@ def mock_model(tmp_path):
     model_path = tmp_path / "model.joblib"
     joblib.dump(model, model_path)
     return model, model_path
-
 
 
 @pytest.fixture
@@ -85,7 +81,9 @@ def test_mlflow_registrar_registers_model(
     mock_start_run.return_value.__enter__.return_value = mock_run_context
     mock_active_run.return_value.info.run_id = "1234abcd"
 
-    registrar = MLflowRegistrar(tracking_uri="file:./mlruns_test", experiment_name="Test_Experiment")
+    registrar = MLflowRegistrar(
+        tracking_uri="file:./mlruns_test", experiment_name="Test_Experiment"
+    )
 
     with patch("builtins.print"):
         registrar.register_model(model, metrics, model_name="TestModel")

@@ -1,4 +1,6 @@
-import sys, os
+import sys
+import os
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import pytest
@@ -6,44 +8,40 @@ import pandas as pd
 import json
 import joblib
 import numpy as np
-from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
-from mlops.modeling.evaluate import (
-    ModelLoader,
-    TestDataLoader,
-    ModelEvaluator
-)
+from mlops.modeling.evaluate import ModelLoader, TestDataLoader, ModelEvaluator
+
 
 class DummyModel:
     def predict(self, X=None):
         import numpy as np
+
         return np.zeros(len(X), dtype=int)  # 0 para todos
 
     def predict_proba(self, X=None):
         import numpy as np
+
         n = len(X)
         return np.tile([[0.8, 0.2]], (n, 1))  # misma probabilidad para todas
-
 
 
 @pytest.fixture
 def sample_df(tmp_path):
     """Crea un DataFrame simulado y lo guarda como parquet."""
-    df = pd.DataFrame({
-        "feature1": [0.2, 0.4, 0.6, 0.8],
-        "feature2": [1, 0, 1, 0],
-        "target": [0, 1, 0, 1]
-    })
+    df = pd.DataFrame(
+        {"feature1": [0.2, 0.4, 0.6, 0.8], "feature2": [1, 0, 1, 0], "target": [0, 1, 0, 1]}
+    )
     parquet_path = tmp_path / "test.parquet"
     df.to_parquet(parquet_path, index=False)
     return df, parquet_path
+
 
 @pytest.fixture
 def mock_model(tmp_path):
     model = DummyModel()
     model_path = tmp_path / "model.joblib"
-    import joblib
+
     joblib.dump(model, model_path)
     return model, model_path
 
@@ -120,6 +118,7 @@ def test_modelevaluator_save_report(tmp_path, sample_df, mock_model):
 
 def test_modelevaluator_handles_predict_proba_errors(sample_df):
     """Verifica que si el modelo no tiene predict_proba no falle."""
+
     class ModelNoProba:
         def predict(self, X):
             return np.zeros(len(X))

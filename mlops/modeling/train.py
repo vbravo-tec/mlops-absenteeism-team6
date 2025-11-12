@@ -98,7 +98,9 @@ class ModelTrainer:
             # AUC si aplica
             if hasattr(self.model, "predict_proba"):
                 try:
-                    self.metrics["roc_auc"] = float(roc_auc_score(y_test, self.model.predict_proba(X_test)[:, 1]))
+                    self.metrics["roc_auc"] = float(
+                        roc_auc_score(y_test, self.model.predict_proba(X_test)[:, 1])
+                    )
                 except Exception:
                     pass
 
@@ -135,8 +137,12 @@ class TrainPipelineCLI:
         parser = argparse.ArgumentParser(description="Pipeline de entrenamiento")
         parser.add_argument("--train", required=True, help="Ruta del dataset de entrenamiento")
         parser.add_argument("--test", required=True, help="Ruta del dataset de prueba")
-        parser.add_argument("--model-out", required=True, help="Ruta donde se guardará el modelo entrenado")
-        parser.add_argument("--metrics-out", required=True, help="Ruta donde se guardarán las métricas")
+        parser.add_argument(
+            "--model-out", required=True, help="Ruta donde se guardará el modelo entrenado"
+        )
+        parser.add_argument(
+            "--metrics-out", required=True, help="Ruta donde se guardarán las métricas"
+        )
         return parser.parse_args()
 
     def run(self):

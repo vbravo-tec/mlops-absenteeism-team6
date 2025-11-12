@@ -35,7 +35,9 @@ class MLflowRegistrar:
     def _configure_mlflow(self):
         mlflow.set_tracking_uri(self.tracking_uri)
         mlflow.set_experiment(self.experiment_name)
-        print(f"[register_model] MLflow configurado con URI={self.tracking_uri}, experimento={self.experiment_name}")
+        print(
+            f"[register_model] MLflow configurado con URI={self.tracking_uri}, experimento={self.experiment_name}"
+        )
 
     def register_model(self, model, metrics, model_name="Absenteeism-BestModel"):
         with mlflow.start_run(run_name="Register_Model"):

@@ -73,9 +73,13 @@ class EvaluationPipelineCLI:
 
     def _parse_args(self):
         parser = argparse.ArgumentParser(description="Evaluación de modelos entrenados")
-        parser.add_argument("--model", required=True, help="Ruta al archivo del modelo entrenado (.joblib)")
+        parser.add_argument(
+            "--model", required=True, help="Ruta al archivo del modelo entrenado (.joblib)"
+        )
         parser.add_argument("--test", required=True, help="Ruta al dataset de prueba (.parquet)")
-        parser.add_argument("--report", required=True, help="Ruta donde se guardará el reporte (.json)")
+        parser.add_argument(
+            "--report", required=True, help="Ruta donde se guardará el reporte (.json)"
+        )
         return parser.parse_args()
 
     def run(self):

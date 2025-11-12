@@ -9,15 +9,15 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler, MinMaxScaler
 
 class ParamLoader:
     """Encargado de leer el archivo de parámetros YAML."""
-    
+
     def __init__(self, path="params.yaml"):
         self.path = path
         self.params = self._load_params()
-    
+
     def _load_params(self):
         with open(self.path, "r", encoding="utf-8") as f:
             return yaml.safe_load(f)
-    
+
     def get(self, key, default=None):
         return self.params.get(key, default)
 
@@ -74,7 +74,9 @@ class FeaturePreprocessor:
         transformers = []
 
         if cat_cols and self.encode == "onehot":
-            transformers.append(("onehot", OneHotEncoder(handle_unknown="ignore", sparse_output=False), cat_cols))
+            transformers.append(
+                ("onehot", OneHotEncoder(handle_unknown="ignore", sparse_output=False), cat_cols)
+            )
 
         if num_cols:
             if self.scale == "standard":
@@ -84,9 +86,7 @@ class FeaturePreprocessor:
 
         if transformers:
             self.column_transformer = ColumnTransformer(
-                transformers=transformers,
-                remainder="drop",
-                verbose_feature_names_out=False
+                transformers=transformers, remainder="drop", verbose_feature_names_out=False
             )
             X_arr = self.column_transformer.fit_transform(X)
 
