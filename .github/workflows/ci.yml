@@ -10,6 +10,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    # Permisos necesarios para que el bot comente en el PR
+    permissions:
+      contents: read
+      pull-requests: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -52,15 +57,8 @@ jobs:
           badge: true
           fail_below_min: true
           format: markdown
+          summary: true
           output: both
           thresholds: "55 80"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # (Opcional) subir el reporte HTML de cobertura como artefacto descargable
-      - name: Upload HTML coverage report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: html-coverage-report
-          path: htmlcov/
