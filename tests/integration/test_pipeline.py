@@ -13,7 +13,7 @@ def test_clean_stage(tmp_path):
         "--task",
         "clean",
         "--input",
-        "data/raw/work_absenteeism_modified.csv",
+        "tests/integration/test_data/work_absenteeism_modified.csv",
         "--output",
         tmp_path / "clean.parquet",
     ]
