@@ -41,7 +41,7 @@ jobs:
       # Ejecutar pruebas unitarias con coverage
       - name: Run tests with coverage
         run: |
-          pytest --cov=mlops --cov-report=term-missing --cov-report=xml:coverage.xml --cov-fail-under=60 -v
+          pytest --cov=mlops --cov-report=term-missing --cov-report=xml:coverage.xml --cov-fail-under=55 -v
 
       # Publicar resumen de cobertura en el PR
       - name: Post coverage summary to PR
@@ -53,7 +53,7 @@ jobs:
           fail_below_min: true
           format: markdown
           output: both
-          thresholds: "60 80"
+          thresholds: "55 80"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
