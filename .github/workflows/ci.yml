@@ -2,9 +2,9 @@ name: ci
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
@@ -35,3 +35,8 @@ jobs:
         run: |
           ruff check .
           black --check .
+
+      # Etapa de pruebas unitarias con cobertura
+      - name: Run tests with coverage
+        run: |
+          pytest --cov=mlops --cov-report=term-missing --cov-fail-under=60 -v
