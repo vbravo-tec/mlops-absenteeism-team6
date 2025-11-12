@@ -9,3 +9,6 @@ line-length = 100
 filterwarnings = [
     "ignore::sklearn.exceptions.UndefinedMetricWarning"
 ]
+markers = [
+    "integration: marca para pruebas de integración end-to-end"
+]
