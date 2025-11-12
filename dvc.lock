@@ -40,8 +40,8 @@ stages:
       size: 15636
     - path: mlops/features.py
       hash: md5
-      md5: 48a7c3919e41b7c2f7fa5bd0f58e748f
-      size: 3883
+      md5: d168d91a4017026560994a227443e395
+      size: 5636
     - path: params.yaml
       hash: md5
       md5: de83a293102d80f66350dfd73049deb9
@@ -103,8 +103,8 @@ stages:
       size: 57063
     - path: mlops/modeling/train.py
       hash: md5
-      md5: 538d2f6e9c25828078558b0c1bbe0e44
-      size: 3438
+      md5: bc0f8d9a824a47ae8e16eea02f38e78c
+      size: 5532
     - path: params.yaml
       hash: md5
       md5: de83a293102d80f66350dfd73049deb9
@@ -135,8 +135,8 @@ stages:
       size: 53598
     - path: mlops/modeling/evaluate.py
       hash: md5
-      md5: 28dde2d85d963f0d6d605190cb4f0c27
-      size: 1525
+      md5: 9e789d7c92b51c7f2eb1464a937cca8f
+      size: 3084
     - path: models/model.pkl
       hash: md5
       md5: 5ad366bcc7507600ceb0ec8300855a39
@@ -156,8 +156,8 @@ stages:
       size: 107
     - path: mlops/modeling/register_model.py
       hash: md5
-      md5: 764a83f2f5bf8aa714b82f89c3652ee9
-      size: 1172
+      md5: 24ab6179a91bae6c49b6c7017ef9a5f2
+      size: 2686
     - path: models/model.pkl
       hash: md5
       md5: 5ad366bcc7507600ceb0ec8300855a39
