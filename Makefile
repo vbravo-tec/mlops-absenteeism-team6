@@ -1,15 +1,24 @@
-.PHONY: setup data train lint
+.PHONY: setup data train lint test test-coverage
 
 setup:
-\tpip install -r requirements.txt
+	pip install -r requirements.txt
 
 data:
-\tdvc pull
+	dvc pull
 
 train:
-\tpython -m mlops.modeling.train
+	python -m mlops.modeling.train
 
 lint:
-\tpython -m pip install pre-commit black ruff isort
-\tpre-commit install
-\tpre-commit run --all-files
+	python -m pip install pre-commit black ruff isort
+	pre-commit install
+	pre-commit run --all-files
+
+test:
+	pytest -v
+
+test-coverage:
+	pytest --cov=mlops --cov-report=term-missing -v
+
+test-coverage-html:
+	pytest --cov=mlops --cov-report=term-missing --cov-report=html -v
