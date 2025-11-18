@@ -289,16 +289,16 @@ Esto permite que los modelos, logs o métricas queden guardados fuera del conten
 
 ## Subir a DockerHub
 
-# 1. Inicia sesión en Docker Hub
+### 1. Inicia sesión en Docker Hub
 
 docker login
 
-# 2. Etiqueta la imagen local para Docker Hub
+### 2. Etiqueta la imagen local para Docker Hub
 
 docker tag mlops-train:latest mlops-team6/mlops-train:latest
 docker tag mlops-train:latest mlops-team6/mlops-train:1.0.0
 
-# 3. Sube la imagen al repositorio de Docker Hub
+### 3. Sube la imagen al repositorio de Docker Hub
 
 docker push mlops-team6/mlops-train:latest
 docker push mlops-team6/mlops-train:1.0.0

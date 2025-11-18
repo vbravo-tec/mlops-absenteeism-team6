@@ -72,3 +72,11 @@ stages:
       - mlops/modeling/register_model.py
       - models/model.pkl
       - metrics.json
+
+  create_baseline:
+    cmd: python -m mlops.monitoring.create_baseline --train data/processed/train.parquet --output mlops/monitoring/baseline_profile.bin
+    deps:
+      - data/processed/train.parquet
+      - mlops/monitoring/create_baseline.py
+    outs:
+      - mlops/monitoring/baseline_profile.bin

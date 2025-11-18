@@ -5,6 +5,8 @@ seaborn
 scikit-learn
 dvc[gdrive]
 mlflow
+evidently
+evidently[dashboard]
 
 # Testing and coverage
 pytest>=7.0
