@@ -74,9 +74,9 @@ stages:
       - metrics.json
 
   create_baseline:
-    cmd: python -m mlops.monitoring.create_baseline --train data/processed/train.parquet --output mlops/monitoring/baseline_profile.bin
+    cmd: python -m mlops.monitoring.create_baseline --train data/processed/train.parquet --output mlops/monitoring/baseline_profile.json
     deps:
       - data/processed/train.parquet
       - mlops/monitoring/create_baseline.py
     outs:
-      - mlops/monitoring/baseline_profile.bin
+      - mlops/monitoring/baseline_profile.json

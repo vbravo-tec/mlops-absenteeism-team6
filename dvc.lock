@@ -174,7 +174,7 @@ stages:
   create_baseline:
     cmd: python -m mlops.monitoring.create_baseline --train 
       data/processed/train.parquet --output 
-      mlops/monitoring/baseline_profile.bin
+      mlops/monitoring/baseline_profile.json
     deps:
     - path: data/processed/train.parquet
       hash: md5
@@ -185,7 +185,7 @@ stages:
       md5: 5f97a6d8334d2941cdf89acf0f38fde5
       size: 1058
     outs:
-    - path: mlops/monitoring/baseline_profile.bin
+    - path: mlops/monitoring/baseline_profile.json
       hash: md5
       md5: 0f15f0213faa044d829e225712ea4d85
       size: 12364
