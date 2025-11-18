@@ -18,9 +18,9 @@ for col in df_train.columns:
     if pd.api.types.is_numeric_dtype(df_train[col]):
         baseline[col] = {
             "mean": float(df_train[col].mean()),  # convertir a float nativo
-            "std": float(df_train[col].std()),    # convertir a float nativo
-            "min": float(df_train[col].min()),    # convertir a float nativo
-            "max": float(df_train[col].max()),    # convertir a float nativo
+            "std": float(df_train[col].std()),  # convertir a float nativo
+            "min": float(df_train[col].min()),  # convertir a float nativo
+            "max": float(df_train[col].max()),  # convertir a float nativo
         }
 
 # Guardar baseline en JSON
